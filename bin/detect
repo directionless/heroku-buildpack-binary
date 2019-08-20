@@ -1,0 +1,19 @@
+#!/bin/bash
+
+BUILD_DIR="$1"
+cd "$BUILD_DIR"
+
+# If there's a single binary, then we're good.
+if [ "1" = $(ls bin | wc -l) ]; then
+    echo "-----> Found a single binary"
+    exit 0
+fi
+
+# If there's a Procfile, we can also handle it
+if [ -e "Procfile" ]; then
+    echo "-----> Found a Procfile"
+    exit 0
+fi
+
+# can't run with this
+exit 1

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+BUILD_DIR="$1"
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+
+if [ -e "Procfile" ]; then
+    echo "-----> Release Found a Procfile"
+    exit 0
+fi
+
+
+echo "-----> Creating a Profile"
+
+BINARY=$(ls bin | wc -l)
+echo "Using binary $BINARY" | indent
+
+echo "web: ./bin/BINARY" > Procfile
