@@ -2,20 +2,21 @@
 
 BUILD_DIR="$1"
 
-indent() {
-  sed -u 's/^/       /'
-}
+cd "$BUILD_DIR"
 
+if [ ! -e "Procfile" ]; then
+    if [ -d "bin" ]; then
+        BINARY=$(find "./bin" -type f)
+    else
+        BINARY=$(find "./" -type f)
+    fi
 
-if [ -e "Procfile" ]; then
-    echo "-----> Release Found a Procfile"
-    exit 0
+    echo "web: $BINARY" > Procfile
 fi
 
-
-echo "-----> Creating a Profile"
-
-BINARY=$(ls bin | wc -l)
-echo "Using binary $BINARY" | indent
-
-echo "web: ./bin/BINARY" > Procfile
+# No content in default_process_types, in favor of writing the procfile
+cat << EOF
+---
+addons:
+default_process_types:
+EOF

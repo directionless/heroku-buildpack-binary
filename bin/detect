@@ -1,17 +1,24 @@
 #!/bin/bash
 
-BUILD_DIR="$1"
-cd "$BUILD_DIR"
+# `heroku builds:create` is clever. If there's a single file, it
+# collapses the directpry structure. Else, it mirrors. Makes it
+# inconsistent to detect.
 
-# If there's a single binary, then we're good.
-if [ "1" = $(ls bin | wc -l) ]; then
-    echo "-----> Found a single binary"
+BUILD_DIR="$1"
+
+if [ "1" = $(find "$BUILD_DIR" -type f | wc -l) ]; then
+    echo "SimpleBinary"
+    exit 0
+fi
+
+if [ "1" = $(find "$BUILD_DIR/bin" -type f | wc -l) ]; then
+    echo "SimpleBinaryInBin"
     exit 0
 fi
 
 # If there's a Procfile, we can also handle it
-if [ -e "Procfile" ]; then
-    echo "-----> Found a Procfile"
+if [ -e "$BUILD_DIR/Procfile" ]; then
+    echo "SimpleProcfile"
     exit 0
 fi
 
